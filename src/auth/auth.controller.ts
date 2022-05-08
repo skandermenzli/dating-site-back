@@ -39,7 +39,8 @@ export class AuthController {
     console.log("extracted user",user);
     
     return{
-      msg:'passport jwt auth guard works!!!'
+      //msg:'passport jwt auth guard works!!!'
+      msg : user 
     }
   }
 
