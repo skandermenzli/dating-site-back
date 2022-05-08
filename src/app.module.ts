@@ -8,6 +8,7 @@ import { ConfigModule } from "@nestjs/config";
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
 import * as dotenv from 'dotenv'
+import { MulterModule } from "@nestjs/platform-express";
 
 dotenv.config();
 
@@ -28,7 +29,10 @@ dotenv.config();
     }),
     UserModule,
     AuthModule,
-    ChatModule],
+    ChatModule,
+    MulterModule.register({
+      dest: './files'
+    })],
   controllers: [AppController],
   providers: [AppService],
 })

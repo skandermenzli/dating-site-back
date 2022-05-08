@@ -17,6 +17,7 @@ const config_1 = require("@nestjs/config");
 const auth_module_1 = require("./auth/auth.module");
 const chat_module_1 = require("./chat/chat.module");
 const dotenv = require("dotenv");
+const platform_express_1 = require("@nestjs/platform-express");
 dotenv.config();
 let AppModule = class AppModule {
     configure(consumer) {
@@ -41,7 +42,10 @@ AppModule = __decorate([
             }),
             user_module_1.UserModule,
             auth_module_1.AuthModule,
-            chat_module_1.ChatModule
+            chat_module_1.ChatModule,
+            platform_express_1.MulterModule.register({
+                dest: './files'
+            })
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

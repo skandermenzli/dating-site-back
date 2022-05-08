@@ -47,4 +47,7 @@ export class UserEntity extends timeStampable {
   @ManyToMany(() => RoomEntity, room => room.users)
   rooms: RoomEntity[]
 
+  @Column({nullable: true})
+  profileImage: string;
+
 }

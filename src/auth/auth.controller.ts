@@ -1,12 +1,16 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { Request } from 'express';
 import { User } from 'src/decorators/user.decorator';
+import { diskStorage } from 'multer';
+
 
 import { AddUserDto } from 'src/user/dto/add-user.dto';
 import { CredentialsDto } from 'src/user/dto/credentials.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-
+import { FileInterceptor } from "@nestjs/platform-express";
+import { editFileName, imageFileFilter } from "./utils-upload-image";
+import { extname } from "path";
 
 @Controller('auth')
 export class AuthController {
@@ -37,6 +41,29 @@ export class AuthController {
     return{
       msg:'passport jwt auth guard works!!!'
     }
+  }
+
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor("image", {
+      storage: diskStorage({
+        destination: './uploads/profileimages',
+        filename: editFileName ,
+      }),
+      fileFilter: imageFileFilter ,
+    }),
+  )
+  async uploadedFile(@UploadedFile() file) {
+    const response = {
+      originalname: file.originalname,
+      filename: file.filename,
+    };
+    return response;
+  }
+
+  @Get('image/:imgpath')
+  seeUploadedFile(@Param('imgpath') image, @Res() res) {
+    return res.sendFile(image, { root: './files' });
   }
 
 }
