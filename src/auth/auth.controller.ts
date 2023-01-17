@@ -91,6 +91,7 @@ export class AuthController {
 
   @Get('/image/:imgpath')
   seeUploadedFile(@Param('imgpath') image, @Res() res) {
+    console.log(image)
 
     console.log("sending profil image back");
     

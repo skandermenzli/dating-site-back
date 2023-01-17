@@ -188,6 +188,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     page.page ++ ; //angular paginator
     const rooms = await this.roomService.getRoomsForUser(socket.data.user.id,page);
     rooms.meta.currentPage -- //angular paginator
+    console.log("in all rooms");
+    
     return this.server.to(socket.id).emit('rooms', rooms);
   }
 
@@ -195,9 +197,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   async  onPaginateMatchedRoom(socket: Socket, page : PageI) {
     page.limit = page.limit > 100 ? 100 : page.limit
     page.page ++ ; //angular paginator
+    console.log(page);
+    
     const rooms = await this.roomService.getMatchedRoomsForUser(socket.data.user.id,page);
     rooms.meta.currentPage -- //angular paginator
+    console.log("in users roooms");
+    
     return this.server.to(socket.id).emit('matchedRooms', rooms);
+  }
+
+  //
+  @SubscribeMessage('paginateSearchedRooms')
+  async  onSearchedRoom(socket: Socket, page : PageI) {
+    page.limit = page.limit > 100 ? 100 : page.limit
+    page.page ++ ; //angular paginator
+    console.log("the page::",page);
+    
+    const rooms = await this.roomService.getSearchedRooms(socket.data.user.id,page,page.search);
+    rooms.meta.currentPage -- //angular paginator
+    console.log(rooms);
+    
+    
+    return this.server.to(socket.id).emit('rooms', rooms);
   }
 
   @SubscribeMessage('leaveRoom')

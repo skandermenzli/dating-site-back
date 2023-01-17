@@ -102,6 +102,21 @@ export class RoomService {
     return paginate(query, options);
   }
 
+  async getSearchedRooms(userId: number, options: IPaginationOptions,search:string): Promise<Pagination<RoomI>> {
+    const userCategories = await this.userService.getCategoriesForUser(userId);
+    const ids = userCategories.map(category =>  category.id);
+    console.log(options) 
+    search = '%'+search+'%'
+
+    const query = this.roomRepository
+    .createQueryBuilder('room')
+    .where('room.name LIKE (:search)', {search})
+    .orWhere('room.description LIKE (:search)', {search})
+
+    return paginate(query, options);
+  }
+
+
   async getRoomsForUser(userId: number, options: IPaginationOptions): Promise<Pagination<RoomI>> {
     const userCategories = await this.userService.getCategoriesForUser(userId);
     const ids = userCategories.map(category =>  category.id);
